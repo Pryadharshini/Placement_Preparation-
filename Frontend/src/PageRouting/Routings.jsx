@@ -14,37 +14,46 @@ import CareerTracks from "../pages/CareerTracks";
 import RoadmapPage from "../pages/RoadmapPage";
 import DSAContent from "../pages/DSAContent";
 import AnalyzeResume from "../pages/AnalyzeResume";
-import Feature from "../pages/Feature"; 
+import Feature from "../pages/Feature";
 import Resources from "../pages/Resources";
-import MockInterview from "../pages/MockInterview";
-import ResourceDetail from "../pages/ResourceDetail"; // create this page
+import ResourceDetail from "../pages/ResourceDetail";
+
+import MockHome from "../pages/MockHome";
+import PersonalInterview from "../pages/PersonalInterview";
+import GroupDiscussion from "../pages/GroupDiscussion";
 
 function Routings() {
   return (
     <Routes>
-      {/* Public */}
+
+      {/* PUBLIC PAGES */}
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
-      {/* App */}
+      {/* APP LAYOUT */}
       <Route path="/app" element={<Layout />}>
         <Route index element={<Dashboard />} />
 
+        {/* Career */}
         <Route path="career-tracks" element={<CareerTracks />} />
         <Route path="career-tracks/:slug" element={<RoadmapPage />} />
 
-        {/* Resource main page */}
+        {/* Resources */}
         <Route path="resources" element={<Resources />} />
-
-        {/* Single resource page (important) */}
         <Route path="resources/:topic" element={<ResourceDetail />} />
 
+        {/* Other */}
         <Route path="dsa" element={<DSAContent />} />
-        <Route path="mock-interview" element={<MockInterview />} />
         <Route path="resume" element={<AnalyzeResume />} />
         <Route path="job" element={<Feature />} />
+
+        {/* 🔥 MOCK INTERVIEW SECTION */}
+        <Route path="mock" element={<MockHome />} />
+        <Route path="mock/personal" element={<PersonalInterview />} />
+        <Route path="mock/group" element={<GroupDiscussion />} />
       </Route>
+
     </Routes>
   );
 }

@@ -10,11 +10,10 @@ const Navbar = () => {
   { name: "Career Tracks", path: "/app/career-tracks" },
   { name: "Resources", path: "/app/resources" },
   { name: "DSA Practice", path: "/app/dsa" },
-  { name: "Mock Interview", path: "/app/mock-interview" },
+  { name: "Mock Interview", path: "/app/mock" },
   { name: "Resume", path: "/app/resume" },
   { name: "Jobs", path: "/app/job" },
 ];
-
 
   return (
     <nav className="fixed top-0 left-0 w-full backdrop-blur-md bg-transparent text-white py-4 px-6 md:px-8 flex items-center justify-between z-50">

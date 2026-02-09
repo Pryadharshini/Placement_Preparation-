@@ -29,7 +29,7 @@ export function RegisterForm({ className, ...props }) {
 
     try {
       const res = await axios.post(
-        "https://dev-backend-nine.vercel.app/api/users",
+        "http://localhost:8000/api/users",
         { name, email, password },
         {
           withCredentials: true, // ✅ IMPORTANT
