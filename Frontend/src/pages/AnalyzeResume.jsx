@@ -59,7 +59,8 @@ export default function AnalyzeResume() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white p-6">
+    <div className="min-h-screen pt-28 bg-gradient-to-br from-black via-gray-900 to-black text-white p-6">
+
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <motion.div

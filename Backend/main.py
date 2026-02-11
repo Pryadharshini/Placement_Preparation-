@@ -7,6 +7,10 @@ import random
 from groq import Groq
 from dotenv import load_dotenv
 
+# 👇 import router ONLY
+from user_routes import router as user_router
+
+
 # =========================================================
 # 🔐 LOAD ENV
 # =========================================================
@@ -18,10 +22,16 @@ print("✅ GROQ KEY LOADED =", groq_key)
 client = Groq(api_key=groq_key)
 
 # =========================================================
-# 🚀 FASTAPI INIT
+# 🚀 FASTAPI INIT (CREATE APP FIRST)
 # =========================================================
 app = FastAPI()
 
+# 👇 include router AFTER app created
+app.include_router(user_router)
+
+# =========================================================
+# 🌐 CORS
+# =========================================================
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -50,7 +60,7 @@ def home():
     return {"message": "🔥 AI Backend Running Perfectly"}
 
 # =========================================================
-# 🧠 MEMORY (GD + INTERVIEW)
+# 🧠 MEMORY
 # =========================================================
 gd_topic = ""
 gd_history = []
@@ -90,7 +100,7 @@ You may start speaking.
     return {"topic": gd_topic, "intro": intro}
 
 # =========================================================
-# 🤖 REAL-TIME VOICE GD REPLY
+# 🤖 GD REPLY
 # =========================================================
 @app.post("/api/gd-reply")
 async def gd_reply(data: dict):
@@ -98,7 +108,6 @@ async def gd_reply(data: dict):
 
     try:
         user_msg = data.get("message")
-
         gd_history.append({"role": "user", "content": user_msg})
 
         prompt = f"""
@@ -113,7 +122,6 @@ Reply naturally like human GD participant.
 - Agree or counter
 - Add new strong point
 - 2 to 3 lines only
-- Encourage discussion
 """
 
         completion = client.chat.completions.create(
@@ -221,7 +229,7 @@ Ask only one question.
         return {"question": "Tell me about yourself"}
 
 # =========================================================
-# 🤖 INTERVIEW NEXT QUESTION + FEEDBACK
+# 🤖 INTERVIEW EVALUATE
 # =========================================================
 @app.post("/api/ai/evaluate")
 async def evaluate_answer(data: dict):
@@ -245,7 +253,7 @@ Answer:
 
 Give:
 Feedback
-Score out of 10
+Score out of 100
 Next Question
 """
 

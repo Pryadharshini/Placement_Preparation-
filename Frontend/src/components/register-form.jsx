@@ -16,9 +16,11 @@ import { Label } from "@/components/ui/label";
 
 export function RegisterForm({ className, ...props }) {
   const navigate = useNavigate();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -30,18 +32,28 @@ export function RegisterForm({ className, ...props }) {
     try {
       const res = await axios.post(
         "http://localhost:8000/api/users",
-        { name, email, password },
         {
-          withCredentials: true, // ✅ IMPORTANT
+          name: name.trim(),
+          email: email.trim(),
+          password: password.trim(),
         }
       );
 
-      console.log("User registered:", res.data);
+      console.log("Registered:", res.data);
 
+      // redirect to login after success
       navigate("/login");
+
     } catch (err) {
-      console.error(err.response?.data || err.message);
-      setError("User already exists or invalid data");
+      console.error("Register error:", err.response?.data || err.message);
+
+      // show real backend error
+      if (err.response?.data?.detail) {
+        setError(err.response.data.detail);
+      } else {
+        setError("Registration failed. Try again.");
+      }
+
     } finally {
       setLoading(false);
     }
@@ -51,56 +63,72 @@ export function RegisterForm({ className, ...props }) {
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Register</CardTitle>
-          <CardDescription>Create a new account</CardDescription>
+          <CardTitle className="text-2xl text-center">Register</CardTitle>
+          <CardDescription className="text-center">
+            Create a new account
+          </CardDescription>
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
+
+            {/* error message */}
             {error && (
-              <p className="text-sm text-red-500 text-center">{error}</p>
+              <p className="text-red-500 text-sm text-center">{error}</p>
             )}
 
+            {/* name */}
             <div className="grid gap-2">
               <Label>Name</Label>
               <Input
                 type="text"
+                placeholder="Enter name"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
 
+            {/* email */}
             <div className="grid gap-2">
               <Label>Email</Label>
               <Input
                 type="email"
+                placeholder="Enter email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
+            {/* password */}
             <div className="grid gap-2">
               <Label>Password</Label>
               <Input
                 type="password"
+                placeholder="Enter password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
 
+            {/* button */}
             <Button type="submit" disabled={loading} className="w-full">
-              {loading ? "Creating..." : "Register"}
+              {loading ? "Creating account..." : "Register"}
             </Button>
 
+            {/* login link */}
             <div className="text-center text-sm">
               Already have an account?{" "}
-              <a href="/login" className="underline">
+              <span
+                className="underline cursor-pointer"
+                onClick={() => navigate("/login")}
+              >
                 Login
-              </a>
+              </span>
             </div>
+
           </form>
         </CardContent>
       </Card>

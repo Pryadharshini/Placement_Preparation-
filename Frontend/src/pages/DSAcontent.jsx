@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BookOpen, Code } from 'lucide-react';
-import dsaTopics from '../data/dsaContent.js'; // Assuming this is the path to your data file
+import dsaTopics from '../data/dsaContent.js';
 import { TopicCard } from '../components/dsa_content/TopicCard';
 import { VideoPlayer } from '../components/dsa_content/VideoPlayer';
 import { AssignmentList } from '../components/dsa_content/AssignmentList';
@@ -10,19 +10,21 @@ function DSAContent() {
   const [activeTab, setActiveTab] = useState('lectures');
 
   const handleLectureComplete = (lectureId) => {
-    // In a real app, this would persist to a backend
     console.log(`Lecture ${lectureId} completed`);
   };
 
   const handleAssignmentToggle = (assignmentId) => {
-    // In a real app, this would persist to a backend
     console.log(`Assignment ${assignmentId} toggled`);
   };
 
   return (
-    <div className="min-h-screen bg-black text-gray-100">
+    // 🔥 IMPORTANT: pt-28 added to avoid navbar overlap
+    <div className="min-h-screen pt-28 bg-black text-gray-100">
+      
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold text-center mb-12 bg-gradient-to-r from-purple-400 to-pink-400 text-transparent bg-clip-text">
+
+        <h1 className="text-4xl leading-tight pb-2 font-bold text-center mb-12 bg-gradient-to-r from-purple-400 to-pink-400 text-transparent bg-clip-text">
+
           DSA Learning Path
         </h1>
 
@@ -49,6 +51,7 @@ function DSAContent() {
                 <BookOpen size={20} />
                 Lectures
               </button>
+
               <button
                 onClick={() => setActiveTab('assignments')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
@@ -90,6 +93,7 @@ function DSAContent() {
             ))}
           </div>
         )}
+
       </div>
     </div>
   );

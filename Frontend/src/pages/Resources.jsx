@@ -56,7 +56,9 @@ const Resources = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0b061f] via-[#0f0a2a] to-black text-white p-10">
+    // ✅ pt-28 FIXES NAVBAR OVERLAP
+    <div className="min-h-screen pt-28 bg-gradient-to-br from-[#0b061f] via-[#0f0a2a] to-black text-white p-10">
+      
       <h1 className="text-4xl font-bold text-center mb-12">
         📚 Learning Resources
       </h1>
@@ -65,7 +67,7 @@ const Resources = () => {
         {resources.map((section, index) => (
           <div
             key={index}
-            className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/10"
+            className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/10 hover:scale-105 transition"
           >
             <h2 className="text-2xl font-semibold mb-4 text-purple-300">
               {section.title}
@@ -75,11 +77,12 @@ const Resources = () => {
               {section.items.map((item, i) => (
                 <li
                   key={i}
-                  className="flex justify-between items-center bg-black/30 px-4 py-2 rounded-lg"
+                  className="flex justify-between items-center bg-black/30 px-4 py-2 rounded-lg hover:bg-black/40 transition"
                 >
                   <span>{item.name}</span>
+
                   <button
-                    onClick={() => navigate(item.slug)}
+                    onClick={() => navigate(`/app/resources/${item.slug}`)}
                     className="text-sm bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded-md"
                   >
                     Start

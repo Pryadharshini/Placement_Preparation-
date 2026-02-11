@@ -17,6 +17,7 @@ import AnalyzeResume from "../pages/AnalyzeResume";
 import Feature from "../pages/Feature";
 import Resources from "../pages/Resources";
 import ResourceDetail from "../pages/ResourceDetail";
+import Profile from "../pages/Profile"; // 🔥 ADD THIS
 
 import MockHome from "../pages/MockHome";
 import PersonalInterview from "../pages/PersonalInterview";
@@ -35,6 +36,9 @@ function Routings() {
       <Route path="/app" element={<Layout />}>
         <Route index element={<Dashboard />} />
 
+        {/* 🔥 PROFILE PAGE */}
+        <Route path="profile" element={<Profile />} />
+
         {/* Career */}
         <Route path="career-tracks" element={<CareerTracks />} />
         <Route path="career-tracks/:slug" element={<RoadmapPage />} />
@@ -48,7 +52,7 @@ function Routings() {
         <Route path="resume" element={<AnalyzeResume />} />
         <Route path="job" element={<Feature />} />
 
-        {/* 🔥 MOCK INTERVIEW SECTION */}
+        {/* MOCK INTERVIEW */}
         <Route path="mock" element={<MockHome />} />
         <Route path="mock/personal" element={<PersonalInterview />} />
         <Route path="mock/group" element={<GroupDiscussion />} />

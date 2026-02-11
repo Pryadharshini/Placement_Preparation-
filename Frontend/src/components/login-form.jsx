@@ -1,4 +1,3 @@
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -14,10 +13,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export function LoginForm({ className, ...props }) {
+export function LoginForm() {
   const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -29,48 +30,95 @@ export function LoginForm({ className, ...props }) {
     try {
       const res = await axios.post(
         "http://localhost:8000/api/users/auth",
-        { email, password },
         {
-          withCredentials: true, // ✅ VERY IMPORTANT
+          email: email.trim(),
+          password: password.trim(),
         }
       );
 
       console.log("Login success:", res.data);
 
-      // Redirect after successful login
-      navigate("/app");
+      const backendUser = res.data.user;
+
+      // 🔥 CHECK IF USER ALREADY EXISTS (edited profile)
+      const existingUser = JSON.parse(localStorage.getItem("user"));
+
+      let finalUser;
+
+      if (existingUser && existingUser.email === backendUser.email) {
+        // ✅ KEEP OLD PROFILE DETAILS (skills, role, goal)
+        finalUser = {
+          ...backendUser,
+          role: existingUser.role || "",
+          goal: existingUser.goal || "",
+          skills: existingUser.skills || "",
+        };
+      } else {
+        // 🆕 NEW USER LOGIN
+        finalUser = {
+          ...backendUser,
+          role: "",
+          goal: "",
+          skills: "",
+        };
+      }
+
+      // ✅ SAVE FINAL USER (WITH OLD DATA PRESERVED)
+      localStorage.setItem("user", JSON.stringify(finalUser));
+
+      // ✅ LOGIN SESSION
+      localStorage.setItem("isLoggedIn", "true");
+
+      // 🔁 REDIRECT BACK
+      const redirectPath = localStorage.getItem("redirectAfterLogin");
+
+      if (redirectPath) {
+        localStorage.removeItem("redirectAfterLogin");
+        navigate(redirectPath);
+      } else {
+        navigate("/app/career-tracks");
+      }
+
     } catch (err) {
-      console.error(err.response?.data || err.message);
-      setError("Invalid email or password");
+      console.error(err);
+
+      if (err.response?.data?.detail) {
+        setError(err.response.data.detail);
+      } else {
+        setError("Login failed. Try again.");
+      }
+
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
+    <div className="flex justify-center items-center min-h-screen bg-black">
+      <Card className="w-[400px] bg-black text-white border border-gray-700">
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-            Enter your email and password to login
+          <CardTitle className="text-2xl text-center">Login</CardTitle>
+          <CardDescription className="text-center text-gray-400">
+            Enter email and password to login
           </CardDescription>
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
+
             {error && (
-              <p className="text-sm text-red-500 text-center">{error}</p>
+              <p className="text-red-500 text-sm text-center">{error}</p>
             )}
 
             <div className="grid gap-2">
               <Label>Email</Label>
               <Input
                 type="email"
-                placeholder="m@example.com"
+                placeholder="Enter email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className="bg-black border-gray-600"
               />
             </div>
 
@@ -78,9 +126,11 @@ export function LoginForm({ className, ...props }) {
               <Label>Password</Label>
               <Input
                 type="password"
+                placeholder="Enter password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="bg-black border-gray-600"
               />
             </div>
 
@@ -89,11 +139,15 @@ export function LoginForm({ className, ...props }) {
             </Button>
 
             <div className="text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <a href="/register" className="underline">
+              Don’t have an account?{" "}
+              <span
+                className="underline cursor-pointer"
+                onClick={() => navigate("/register")}
+              >
                 Sign up
-              </a>
+              </span>
             </div>
+
           </form>
         </CardContent>
       </Card>
